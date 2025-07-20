@@ -2,6 +2,27 @@ import streamlit as st
 import pandas as pd
 import random
 
+# 簡易ログイン認証
+def check_password():
+    def password_entered():
+        if st.session_state["username"] == "admin" and st.session_state["password"] == "pass123":
+            st.session_state["authenticated"] = True
+        else:
+            st.session_state["authenticated"] = False
+            st.warning("ユーザー名またはパスワードが間違っています")
+
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
+    if not st.session_state["authenticated"]:
+        st.title("ログイン")
+        st.text_input("ユーザー名", key="username")
+        st.text_input("パスワード", type="password", key="password")
+        st.button("ログイン", on_click=password_entered)
+        st.stop()
+check_password()  # ← ログイン認証を開始
+
+
 # CSVファイルの読み込み（初回のみ）
 @st.cache_data
 def load_data():
